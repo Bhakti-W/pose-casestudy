@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>InventoryPro – Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #f4f5f7;
+    --surface: #ffffff;
+    --surface2: #f8f9fb;
+    --border: #e2e5ea;
+    --border2: #d0d5dd;
+    --text: #1a1d23;
+    --text2: #5a6070;
+    --text3: #9aa0ad;
+    --accent: #2563eb;
+    --accent-light: #eff4ff;
+    --accent-hover: #1d4ed8;
+    --green: #16a34a;
+    --green-light: #f0fdf4;
+    --red: #dc2626;
+    --red-light: #fef2f2;
+    --orange: #ea580c;
+    --orange-light: #fff7ed;
+    --yellow: #ca8a04;
+    --yellow-light: #fefce8;
+    --purple: #7c3aed;
+    --purple-light: #f5f3ff;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow: 0 4px 16px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+    --shadow-lg: 0 12px 40px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.05);
+    --radius: 10px;
+    --radius-sm: 6px;
+    --radius-lg: 16px;
+    --sidebar-w: 240px;
+    --font: 'DM Sans', sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; font-family: var(--font); background: var(--bg); color: var(--text); font-size: 14px; }
+
+  /* ========== UTILITIES ========== */
+  .hidden { display: none !important; }
+  .flex { display: flex; }
+  .items-center { align-items: center; }
+  .gap-2 { gap: 8px; }
+  .gap-3 { gap: 12px; }
+  .gap-4 { gap: 16px; }
+  .ml-auto { margin-left: auto; }
+  .w-full { width: 100%; }
+  .text-sm { font-size: 12px; }
+  .text-xs { font-size: 11px; }
+  .font-500 { font-weight: 500; }
+  .font-600 { font-weight: 600; }
+  .color-green { color: var(--green); }
+  .color-red { color: var(--red); }
+  .color-orange { color: var(--orange); }
+  .color-accent { color: var(--accent); }
+  .color-muted { color: var(--text2); }
+
+  /* ========== LOGIN PAGE ========== */
+  #login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f0f4ff 0%, #f4f5f7 50%, #eef2f8 100%);
+    padding: 24px;
+    animation: fadeIn 0.5s ease;
+  }
+  .login-card {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 420px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .login-header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+    padding: 32px 36px 28px;
+    color: white;
+  }
+  .login-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .login-logo-icon {
+    width: 38px; height: 38px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .login-logo span { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+  .login-header p { font-size: 13px; opacity: 0.8; margin-top: 4px; }
+  .login-body { padding: 32px 36px; }
+  .form-group { margin-bottom: 18px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+  .form-group input, .form-group select {
+    width: 100%; padding: 10px 14px; border: 1.5px solid var(--border2);
+    border-radius: var(--radius-sm); font-family: var(--font); font-size: 14px;
+    color: var(--text); background: var(--surface); transition: border 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+  .form-group input:focus, .form-group select:focus {
+    border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+  }
+  .btn-login {
+    width: 100%; padding: 11px; background: var(--accent); color: white;
+    border: none; border-radius: var(--radius-sm); font-family: var(--font);
+    font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s, transform 0.1s;
+    margin-top: 4px;
+  }
+  .btn-login:hover { background: var(--accent-hover); }
+  .btn-login:active { transform: scale(0.99); }
+  .login-hint { margin-top: 18px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; }
+  .login-hint p { font-size: 12px; color: var(--text2); line-height: 1.7; }
+  .login-hint strong { color: var(--text); }
+  .login-error { background: var(--red-light); border: 1px solid #fecaca; color: var(--red); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13px; margin-bottom: 14px; }
+
+  /* ========== APP SHELL ========== */
+  #app { display: flex; height: 100vh; overflow: hidden; }
+
+  /* ========== SIDEBAR ========== */
+  .sidebar {
+    width: var(--sidebar-w); background: var(--surface); border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; flex-shrink: 0; overflow: hidden;
+    animation: slideInLeft 0.35s ease;
+  }
+  .sidebar-brand {
+    padding: 20px 20px 16px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .brand-icon {
+    width: 34px; height: 34px; background: linear-gradient(135deg, #1e3a8a, #2563eb);
+    border-radius: 9px; display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .brand-name { font-size: 16px; font-weight: 700; letter-spacing: -0.4px; color: var(--text); }
+  .brand-sub { font-size: 10px; color: var(--text3); font-weight: 400; letter-spacing: 0.3px; text-transform: uppercase; }
+  .sidebar-user {
+    padding: 14px 20px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .user-avatar {
+    width: 32px; height: 32px; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center; font-size: 12px; font-weight: 700;
+    color: white; flex-shrink: 0;
+  }
+  .user-info .name { font-size: 13px; font-weight: 600; }
+  .user-info .role-badge {
+    font-size: 10px; font-weight: 600; padding: 1px 7px; border-radius: 100px;
+    text-transform: uppercase; letter-spacing: 0.4px; display: inline-block; margin-top: 2px;
+  }
+  .role-admin .role-badge { background: var(--accent-light); color: var(--accent); }
+  .role-staff .role-badge { background: var(--green-light); color: var(--green); }
+  .role-supplier .role-badge { background: var(--purple-light); color: var(--purple); }
+  .sidebar-nav { flex: 1; overflow-y: auto; padding: 10px 10px; }
+  .nav-section { margin-bottom: 6px; }
+  .nav-section-label { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.8px; padding: 6px 10px 4px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px; padding: 8px 10px;
+    border-radius: var(--radius-sm); cursor: pointer; transition: background 0.15s, color 0.15s;
+    color: var(--text2); font-size: 13px; font-weight: 500; margin-bottom: 2px; border: none;
+    background: none; width: 100%; text-align: left;
+  }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { background: var(--accent-light); color: var(--accent); font-weight: 600; }
+  .nav-icon { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+  .sidebar-footer { padding: 14px 10px; border-top: 1px solid var(--border); }
+  .btn-logout {
+    display: flex; align-items: center; gap: 10px; padding: 8px 10px;
+    border-radius: var(--radius-sm); cursor: pointer; color: var(--red);
+    font-size: 13px; font-weight: 500; border: none; background: none; width: 100%;
+    transition: background 0.15s;
+  }
+  .btn-logout:hover { background: var(--red-light); }
+
+  /* ========== MAIN AREA ========== */
+  .main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .topbar {
+    height: 56px; background: var(--surface); border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; padding: 0 24px; gap: 16px; flex-shrink: 0;
+  }
+  .topbar-title { font-size: 16px; font-weight: 700; color: var(--text); }
+  .topbar-sub { font-size: 12px; color: var(--text3); }
+  .topbar-actions { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+  .page-content { flex: 1; overflow-y: auto; padding: 24px; }
+
+  /* ========== BUTTONS ========== */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px;
+    border-radius: var(--radius-sm); font-family: var(--font); font-size: 13px;
+    font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; white-space: nowrap;
+  }
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-outline { background: white; color: var(--text); border: 1.5px solid var(--border2); }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+  .btn-danger { background: var(--red-light); color: var(--red); border: 1.5px solid #fecaca; }
+  .btn-danger:hover { background: var(--red); color: white; }
+  .btn-success { background: var(--green-light); color: var(--green); border: 1.5px solid #bbf7d0; }
+  .btn-success:hover { background: var(--green); color: white; }
+  .btn-sm { padding: 5px 10px; font-size: 12px; }
+  .btn-icon { padding: 7px; border-radius: var(--radius-sm); background: var(--surface2); border: 1.5px solid var(--border); cursor: pointer; font-size: 14px; transition: all 0.15s; }
+  .btn-icon:hover { background: var(--accent-light); border-color: var(--accent); }
+
+  /* ========== CARDS ========== */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-sm); }
+  .card-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+  .card-title { font-size: 14px; font-weight: 700; }
+  .card-body { padding: 20px; }
+
+  /* ========== STATS GRID ========== */
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 18px 20px; box-shadow: var(--shadow-sm); display: flex; align-items: flex-start; gap: 14px;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .stat-card:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+  .stat-icon {
+    width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center;
+    justify-content: center; font-size: 20px; flex-shrink: 0;
+  }
+  .stat-content .label { font-size: 12px; color: var(--text2); font-weight: 500; margin-bottom: 4px; }
+  .stat-content .value { font-size: 24px; font-weight: 700; line-height: 1; letter-spacing: -0.5px; }
+  .stat-content .change { font-size: 11px; margin-top: 4px; color: var(--text3); }
+
+  /* ========== TABLE ========== */
+  .table-wrap { overflow-x: auto; border-radius: var(--radius); }
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { background: var(--surface2); }
+  th { padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  td { padding: 11px 14px; font-size: 13px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+  .badge {
+    display: inline-block; padding: 2px 9px; border-radius: 100px; font-size: 11px; font-weight: 600;
+  }
+  .badge-green { background: var(--green-light); color: var(--green); }
+  .badge-red { background: var(--red-light); color: var(--red); }
+  .badge-orange { background: var(--orange-light); color: var(--orange); }
+  .badge-blue { background: var(--accent-light); color: var(--accent); }
+  .badge-purple { background: var(--purple-light); color: var(--purple); }
+  .badge-yellow { background: var(--yellow-light); color: var(--yellow); }
+
+  /* ========== MODAL ========== */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 1000;
+    display: flex; align-items: center; justify-content: center; padding: 24px;
+    animation: fadeIn 0.2s ease;
+  }
+  .modal {
+    background: var(--surface); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);
+    width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto;
+    animation: slideUp 0.25s ease;
+  }
+  .modal-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+  .modal-title { font-size: 16px; font-weight: 700; }
+  .modal-close { margin-left: auto; width: 28px; height: 28px; border-radius: 6px; background: var(--surface2); border: 1px solid var(--border); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: background 0.15s; }
+  .modal-close:hover { background: var(--red-light); color: var(--red); }
+  .modal-body { padding: 20px 24px; }
+  .modal-footer { padding: 14px 24px; border-top: 1px solid var(--border); display: flex; gap: 10px; justify-content: flex-end; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-field { margin-bottom: 14px; }
+  .form-field label { display: block; font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.4px; }
+  .form-field input, .form-field select, .form-field textarea {
+    width: 100%; padding: 9px 12px; border: 1.5px solid var(--border2);
+    border-radius: var(--radius-sm); font-family: var(--font); font-size: 13px;
+    color: var(--text); background: var(--surface); outline: none; transition: border 0.15s;
+  }
+  .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
+    border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
+  }
+  .form-field textarea { resize: vertical; min-height: 80px; }
+
+  /* ========== SEARCH BAR ========== */
+  .search-wrap { position: relative; }
+  .search-wrap input { padding-left: 34px; background: var(--surface2); border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-family: var(--font); font-size: 13px; padding: 8px 12px 8px 34px; outline: none; min-width: 220px; }
+  .search-wrap input:focus { border-color: var(--accent); background: white; }
+  .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 14px; pointer-events: none; }
+
+  /* ========== ALERTS ========== */
+  .alert { padding: 12px 16px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .alert-success { background: var(--green-light); color: var(--green); border: 1px solid #bbf7d0; }
+  .alert-error { background: var(--red-light); color: var(--red); border: 1px solid #fecaca; }
+  .alert-info { background: var(--accent-light); color: var(--accent); border: 1px solid #bfdbfe; }
+  .alert-warning { background: var(--orange-light); color: var(--orange); border: 1px solid #fed7aa; }
+
+  /* ========== PROGRESS BAR ========== */
+  .progress-bar { height: 6px; background: var(--border); border-radius: 100px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 100px; transition: width 0.3s; }
+
+  /* ========== REPORT ========== */
+  .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .report-chart-placeholder {
+    background: linear-gradient(135deg, var(--accent-light), #e0e9ff);
+    border: 1.5px dashed #93c5fd; border-radius: var(--radius);
+    padding: 30px 20px; text-align: center; color: var(--accent);
+  }
+  .chart-canvas { width: 100%; height: 200px; position: relative; }
+
+  /* ========== ANIMATIONS ========== */
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes slideInLeft { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+  @keyframes pageIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .page-section { animation: pageIn 0.3s ease; }
+
+  /* ========== EMPTY STATE ========== */
+  .empty-state { text-align: center; padding: 48px 24px; color: var(--text3); }
+  .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; }
+
+  /* ========== TOAST ========== */
+  #toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+  .toast {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 12px 16px; box-shadow: var(--shadow-lg); font-size: 13px; font-weight: 500;
+    display: flex; align-items: center; gap: 10px; min-width: 260px; max-width: 360px;
+    animation: slideUp 0.25s ease;
+  }
+  .toast-success { border-left: 3px solid var(--green); }
+  .toast-error { border-left: 3px solid var(--red); }
+  .toast-info { border-left: 3px solid var(--accent); }
+
+  /* ========== STOCK METER ========== */
+  .stock-meter { margin-top: 6px; }
+
+  /* ========== RESPONSIVE ADJUSTMENTS ========== */
+  @media (max-width: 1100px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 800px) { .report-grid { grid-template-columns: 1fr; } .form-row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- ==================== LOGIN PAGE ==================== -->
+<div id="login-page">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="login-logo">
+        <div class="login-logo-icon">📦</div>
+        <span>InventoryPro</span>
+      </div>
+      <p>Sign in to your workspace</p>
+    </div>
+    <div class="login-body">
+      <div id="login-error" class="login-error hidden"></div>
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="login-username" placeholder="Enter your username" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="login-password" placeholder="Enter your password" />
+      </div>
+      <div class="form-group">
+        <label>Role</label>
+        <select id="login-role">
+          <option value="">Select your role</option>
+          <option value="admin">Admin</option>
+          <option value="staff">Staff</option>
+          <option value="supplier">Supplier</option>
+        </select>
+      </div>
+      <button class="btn-login" onclick="handleLogin()">Sign In</button>
+      <div class="login-hint">
+        <p>
+          <strong>Demo Credentials:</strong><br>
+          Admin: <strong>admin / admin123</strong><br>
+          Staff: <strong>staff / staff123</strong><br>
+          Supplier: <strong>supplier / sup123</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MAIN APP ==================== -->
+<div id="app" class="hidden">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">📦</div>
+      <div>
+        <div class="brand-name">InventoryPro</div>
+        <div class="brand-sub">Management System</div>
+      </div>
+    </div>
+    <div class="sidebar-user" id="sidebar-user"></div>
+    <nav class="sidebar-nav" id="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="logout()">
+        <span>🚪</span> Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title" id="topbar-title">Dashboard</div>
+        <div class="topbar-sub" id="topbar-sub">Overview of your inventory</div>
+      </div>
+      <div class="topbar-actions" id="topbar-actions"></div>
+    </div>
+    <div class="page-content" id="page-content"></div>
+  </div>
+</div>
+
+<!-- ==================== MODAL ==================== -->
+<div id="modal-overlay" class="modal-overlay hidden">
+  <div class="modal" id="modal-box"></div>
+</div>
+
+<!-- ==================== TOAST ==================== -->
+<div id="toast-container"></div>
+
+<script>
+// ==================== DATA ====================
+const USERS = {
+  admin:    { password: 'admin123',  role: 'admin',    name: 'Alex Admin',    color: '#2563eb' },
+  staff:    { password: 'staff123',  role: 'staff',    name: 'Sam Staff',     color: '#16a34a' },
+  supplier: { password: 'sup123',    role: 'supplier', name: 'Sue Supplier',  color: '#7c3aed' },
+};
+
+let products = [
+  { id: 1, name: 'Office Chair',       category: 'Furniture',    sku: 'FRN-001', price: 4500, stock: 24, minStock: 10, supplier: 'FurniCo',    status: 'in-stock' },
+  { id: 2, name: 'Laptop Stand',       category: 'Electronics',  sku: 'ELC-012', price: 1200, stock: 6,  minStock: 15, supplier: 'TechMart',   status: 'low-stock' },
+  { id: 3, name: 'Wireless Mouse',     category: 'Electronics',  sku: 'ELC-007', price: 890,  stock: 0,  minStock: 20, supplier: 'TechMart',   status: 'out-of-stock' },
+  { id: 4, name: 'A4 Paper (Ream)',    category: 'Stationery',   sku: 'STN-003', price: 320,  stock: 80, minStock: 50, supplier: 'PaperWorld', status: 'in-stock' },
+  { id: 5, name: 'Whiteboard Marker',  category: 'Stationery',   sku: 'STN-009', price: 180,  stock: 45, minStock: 30, supplier: 'PaperWorld', status: 'in-stock' },
+  { id: 6, name: 'Standing Desk',      category: 'Furniture',    sku: 'FRN-008', price: 12000,stock: 3,  minStock: 5,  supplier: 'FurniCo',    status: 'low-stock' },
+  { id: 7, name: 'USB-C Hub',          category: 'Electronics',  sku: 'ELC-021', price: 2200, stock: 18, minStock: 10, supplier: 'TechMart',   status: 'in-stock' },
+  { id: 8, name: 'Notebook (A5)',      category: 'Stationery',   sku: 'STN-015', price: 95,   stock: 120,minStock: 40, supplier: 'PaperWorld', status: 'in-stock' },
+];
+
+let orders = [
+  { id: 'ORD-001', product: 'Wireless Mouse',    qty: 50, supplier: 'TechMart',   date: '2025-03-15', status: 'pending',   total: 44500 },
+  { id: 'ORD-002', product: 'Laptop Stand',      qty: 30, supplier: 'TechMart',   date: '2025-03-12', status: 'received',  total: 36000 },
+  { id: 'ORD-003', product: 'A4 Paper (Ream)',   qty: 100,supplier: 'PaperWorld', date: '2025-03-10', status: 'in-transit',total: 32000 },
+  { id: 'ORD-004', product: 'Standing Desk',     qty: 10, supplier: 'FurniCo',    date: '2025-03-08', status: 'received',  total: 120000 },
+  { id: 'ORD-005', product: 'USB-C Hub',         qty: 25, supplier: 'TechMart',   date: '2025-03-20', status: 'pending',   total: 55000 },
+];
+
+let nextProductId = 9;
+let currentUser = null;
+let currentPage = 'dashboard';
+
+// ==================== NAV CONFIG ====================
+const NAV = {
+  admin: [
+    { section: 'Main', items: [
+      { id: 'dashboard', label: 'Dashboard',    icon: '🏠' },
+      { id: 'products',  label: 'Products',     icon: '📦' },
+      { id: 'stock',     label: 'Check Stock',  icon: '📊' },
+      { id: 'orders',    label: 'Orders',       icon: '🛒' },
+    ]},
+    { section: 'Reports', items: [
+      { id: 'reports',   label: 'Generate Report', icon: '📄' },
+    ]},
+  ],
+  staff: [
+    { section: 'Main', items: [
+      { id: 'dashboard', label: 'Dashboard',    icon: '🏠' },
+      { id: 'products',  label: 'Products',     icon: '📦' },
+      { id: 'stock',     label: 'Check Stock',  icon: '📊' },
+      { id: 'orders',    label: 'Place Order',  icon: '🛒' },
+    ]},
+  ],
+  supplier: [
+    { section: 'Supplier Portal', items: [
+      { id: 'dashboard', label: 'Dashboard',    icon: '🏠' },
+      { id: 'orders',    label: 'Receive Stock',icon: '📥' },
+    ]},
+  ],
+};
+
+// ==================== AUTH ====================
+function handleLogin() {
+  const username = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value.trim();
+  const role     = document.getElementById('login-role').value;
+  const errEl    = document.getElementById('login-error');
+
+  if (!username || !password || !role) {
+    errEl.textContent = 'Please fill in all fields.';
+    errEl.classList.remove('hidden');
+    return;
+  }
+
+  const user = USERS[username];
+  if (!user || user.password !== password || user.role !== role) {
+    errEl.textContent = 'Invalid credentials or mismatched role. Please try again.';
+    errEl.classList.remove('hidden');
+    return;
+  }
+
+  errEl.classList.add('hidden');
+  currentUser = { username, ...user };
+  document.getElementById('login-page').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  initApp();
+}
+
+function logout() {
+  currentUser = null;
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('login-page').classList.remove('hidden');
+  document.getElementById('login-username').value = '';
+  document.getElementById('login-password').value = '';
+  document.getElementById('login-role').value = '';
+}
+
+// ==================== APP INIT ====================
+function initApp() {
+  renderSidebarUser();
+  renderNav();
+  navigateTo('dashboard');
+}
+
+function renderSidebarUser() {
+  const el = document.getElementById('sidebar-user');
+  const initials = currentUser.name.split(' ').map(w => w[0]).join('');
+  el.innerHTML = `
+    <div class="user-avatar" style="background:${currentUser.color}">${initials}</div>
+    <div class="user-info role-${currentUser.role}">
+      <div class="name">${currentUser.name}</div>
+      <div class="role-badge">${currentUser.role}</div>
+    </div>`;
+}
+
+function renderNav() {
+  const nav = document.getElementById('sidebar-nav');
+  const sections = NAV[currentUser.role] || [];
+  nav.innerHTML = sections.map(s => `
+    <div class="nav-section">
+      <div class="nav-section-label">${s.section}</div>
+      ${s.items.map(item => `
+        <button class="nav-item" id="nav-${item.id}" onclick="navigateTo('${item.id}')">
+          <span class="nav-icon">${item.icon}</span>
+          ${item.label}
+        </button>`).join('')}
+    </div>`).join('');
+}
+
+function navigateTo(page) {
+  currentPage = page;
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  const navEl = document.getElementById(`nav-${page}`);
+  if (navEl) navEl.classList.add('active');
+
+  const pages = {
+    dashboard: renderDashboard,
+    products:  renderProducts,
+    stock:     renderStock,
+    orders:    renderOrders,
+    reports:   renderReports,
+  };
+
+  if (pages[page]) pages[page]();
+}
+
+// ==================== TOPBAR ====================
+function setTopbar(title, sub, actionsHTML = '') {
+  document.getElementById('topbar-title').textContent = title;
+  document.getElementById('topbar-sub').textContent = sub;
+  document.getElementById('topbar-actions').innerHTML = actionsHTML;
+}
+
+// ==================== DASHBOARD ====================
+function renderDashboard() {
+  const totalProducts = products.length;
+  const inStock       = products.filter(p => p.status === 'in-stock').length;
+  const lowStock      = products.filter(p => p.status === 'low-stock').length;
+  const outStock      = products.filter(p => p.status === 'out-of-stock').length;
+  const pendingOrders = orders.filter(o => o.status === 'pending').length;
+  const totalValue    = products.reduce((s, p) => s + p.price * p.stock, 0);
+
+  setTopbar('Dashboard', `Welcome back, ${currentUser.name}!`);
+
+  const isAdmin = currentUser.role === 'admin';
+  const isSupplier = currentUser.role === 'supplier';
+
+  let statsHTML = '';
+  if (!isSupplier) {
+    statsHTML = `
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#eff4ff">📦</div>
+        <div class="stat-content">
+          <div class="label">Total Products</div>
+          <div class="value">${totalProducts}</div>
+          <div class="change">Across all categories</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#f0fdf4">✅</div>
+        <div class="stat-content">
+          <div class="label">In Stock</div>
+          <div class="value" style="color:var(--green)">${inStock}</div>
+          <div class="change">${lowStock} low · ${outStock} out</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#fff7ed">🛒</div>
+        <div class="stat-content">
+          <div class="label">Pending Orders</div>
+          <div class="value" style="color:var(--orange)">${pendingOrders}</div>
+          <div class="change">Awaiting delivery</div>
+        </div>
+      </div>
+      ${isAdmin ? `
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#f5f3ff">💰</div>
+        <div class="stat-content">
+          <div class="label">Stock Value</div>
+          <div class="value" style="color:var(--purple)">₹${(totalValue/1000).toFixed(0)}K</div>
+          <div class="change">Total inventory worth</div>
+        </div>
+      </div>` : `
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#fef2f2">⚠️</div>
+        <div class="stat-content">
+          <div class="label">Out of Stock</div>
+          <div class="value" style="color:var(--red)">${outStock}</div>
+          <div class="change">Needs immediate reorder</div>
+        </div>
+      </div>`}
+    </div>`;
+  } else {
+    statsHTML = `
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#fff7ed">📥</div>
+        <div class="stat-content">
+          <div class="label">Pending Orders</div>
+          <div class="value" style="color:var(--orange)">${pendingOrders}</div>
+          <div class="change">Awaiting your delivery</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#f0fdf4">✅</div>
+        <div class="stat-content">
+          <div class="label">Delivered Orders</div>
+          <div class="value" style="color:var(--green)">${orders.filter(o=>o.status==='received').length}</div>
+          <div class="change">Successfully fulfilled</div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // Low stock alert
+  const lowItems = products.filter(p => p.stock <= p.minStock);
+  let alertHTML = '';
+  if (lowItems.length > 0 && currentUser.role !== 'supplier') {
+    alertHTML = `<div class="alert alert-warning">⚠️ ${lowItems.length} product(s) are at or below minimum stock level. <strong>Reorder recommended.</strong></div>`;
+  }
+
+  // Recent activity
+  const recentOrders = [...orders].slice(-4).reverse();
+  const recentHTML = recentOrders.map(o => `
+    <tr>
+      <td><span class="font-500">${o.id}</span></td>
+      <td>${o.product}</td>
+      <td>${o.supplier}</td>
+      <td>${o.date}</td>
+      <td><span class="badge ${statusBadge(o.status)}">${o.status}</span></td>
+      <td class="font-500">₹${o.total.toLocaleString()}</td>
+    </tr>`).join('');
+
+  const lowStockHTML = lowItems.slice(0, 4).map(p => `
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div style="flex:1">
+        <div class="font-500">${p.name}</div>
+        <div class="text-sm color-muted">${p.sku} · ${p.category}</div>
+      </div>
+      <div style="text-align:right;min-width:100px">
+        <div class="font-600" style="color:${p.stock === 0 ? 'var(--red)' : 'var(--orange)'}">${p.stock} units</div>
+        <div class="text-xs color-muted">min: ${p.minStock}</div>
+        <div class="progress-bar stock-meter" style="width:80px;margin-left:auto">
+          <div class="progress-fill" style="width:${Math.min(100,(p.stock/p.minStock)*100)}%;background:${p.stock===0?'var(--red)':'var(--orange)'}"></div>
+        </div>
+      </div>
+    </div>`).join('');
+
+  document.getElementById('page-content').innerHTML = `
+    <div class="page-section">
+      ${alertHTML}
+      ${statsHTML}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="card">
+          <div class="card-header">
+            <span>🛒</span>
+            <span class="card-title">Recent Orders</span>
+            <button class="btn btn-outline btn-sm ml-auto" onclick="navigateTo('orders')">View All</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Order ID</th><th>Product</th><th>Supplier</th><th>Date</th><th>Status</th><th>Total</th></tr></thead>
+              <tbody>${recentHTML}</tbody>
+            </table>
+          </div>
+        </div>
+        ${currentUser.role !== 'supplier' ? `
+        <div class="card">
+          <div class="card-header">
+            <span>⚠️</span>
+            <span class="card-title">Low Stock Alerts</span>
+            <button class="btn btn-outline btn-sm ml-auto" onclick="navigateTo('stock')">View Stock</button>
+          </div>
+          <div class="card-body">
+            ${lowItems.length === 0 ? '<div class="empty-state"><div class="icon">✅</div><p>All products are well stocked!</p></div>' : lowStockHTML}
+          </div>
+        </div>` : ''}
+      </div>
+    </div>`;
+}
+
+// ==================== PRODUCTS ====================
+function renderProducts(filter = '') {
+  const canEdit = currentUser.role === 'admin';
+  const canView = currentUser.role !== 'supplier';
+
+  if (!canView) { document.getElementById('page-content').innerHTML = `<div class="empty-state"><div class="icon">🔒</div><p>Access restricted for your role.</p></div>`; return; }
+
+  setTopbar('Products', 'Manage your product catalog',
+    canEdit ? `<button class="btn btn-primary" onclick="openAddProduct()">+ Add Product</button>` : '');
+
+  const filtered = filter ? products.filter(p =>
+    p.name.toLowerCase().includes(filter.toLowerCase()) ||
+    p.category.toLowerCase().includes(filter.toLowerCase()) ||
+    p.sku.toLowerCase().includes(filter.toLowerCase())
+  ) : products;
+
+  const rows = filtered.map(p => `
+    <tr>
+      <td><span class="font-500" style="font-family:var(--mono);font-size:12px;color:var(--text2)">${p.sku}</span></td>
+      <td><div class="font-500">${p.name}</div><div class="text-xs color-muted">${p.category}</div></td>
+      <td>₹${p.price.toLocaleString()}</td>
+      <td>
+        <span class="font-600" style="color:${p.stock===0?'var(--red)':p.stock<=p.minStock?'var(--orange)':'var(--green)'}">${p.stock}</span>
+        <span class="text-xs color-muted"> / min ${p.minStock}</span>
+      </td>
+      <td>${p.supplier}</td>
+      <td><span class="badge ${statusBadge(p.status)}">${p.status.replace('-',' ')}</span></td>
+      ${canEdit ? `<td>
+        <div class="flex gap-2">
+          <button class="btn btn-outline btn-sm" onclick="openEditProduct(${p.id})">✏️ Edit</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteProduct(${p.id})">🗑️</button>
+        </div>
+      </td>` : '<td></td>'}
+    </tr>`).join('');
+
+  document.getElementById('page-content').innerHTML = `
+    <div class="page-section">
+      <div class="card">
+        <div class="card-header">
+          <span>📦</span>
+          <span class="card-title">All Products (${filtered.length})</span>
+          <div class="search-wrap ml-auto">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Search products..." value="${filter}" oninput="renderProducts(this.value)"/>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>SKU</th><th>Product</th><th>Price</th><th>Stock</th><th>Supplier</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>${rows.length ? rows : '<tr><td colspan="7"><div class="empty-state"><div class="icon">🔍</div><p>No products found.</p></div></td></tr>'}</tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+}
+
+function openAddProduct() {
+  showModal('Add New Product', `
+    <div class="form-row">
+      <div class="form-field"><label>Product Name</label><input id="pf-name" placeholder="e.g. Office Chair"/></div>
+      <div class="form-field"><label>SKU</label><input id="pf-sku" placeholder="e.g. FRN-010"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label>Category</label>
+        <select id="pf-cat"><option>Furniture</option><option>Electronics</option><option>Stationery</option><option>Other</option></select>
+      </div>
+      <div class="form-field"><label>Supplier</label><input id="pf-sup" placeholder="Supplier name"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label>Price (₹)</label><input type="number" id="pf-price" placeholder="0"/></div>
+      <div class="form-field"><label>Initial Stock</label><input type="number" id="pf-stock" placeholder="0"/></div>
+    </div>
+    <div class="form-field"><label>Min Stock Level</label><input type="number" id="pf-min" placeholder="10"/></div>`,
+    `<button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+     <button class="btn btn-primary" onclick="saveNewProduct()">Add Product</button>`);
+}
+
+function saveNewProduct() {
+  const name  = document.getElementById('pf-name').value.trim();
+  const sku   = document.getElementById('pf-sku').value.trim();
+  const cat   = document.getElementById('pf-cat').value;
+  const sup   = document.getElementById('pf-sup').value.trim();
+  const price = parseInt(document.getElementById('pf-price').value) || 0;
+  const stock = parseInt(document.getElementById('pf-stock').value) || 0;
+  const min   = parseInt(document.getElementById('pf-min').value) || 10;
+
+  if (!name || !sku) { showToast('error', 'Product name and SKU are required.'); return; }
+
+  const status = stock === 0 ? 'out-of-stock' : stock <= min ? 'low-stock' : 'in-stock';
+  products.push({ id: nextProductId++, name, category: cat, sku, price, stock, minStock: min, supplier: sup || 'Unknown', status });
+  closeModal();
+  showToast('success', `"${name}" added to inventory!`);
+  renderProducts();
+}
+
+function openEditProduct(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  showModal('Edit Product', `
+    <div class="form-row">
+      <div class="form-field"><label>Product Name</label><input id="ef-name" value="${p.name}"/></div>
+      <div class="form-field"><label>SKU</label><input id="ef-sku" value="${p.sku}"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label>Category</label>
+        <select id="ef-cat">
+          <option ${p.category==='Furniture'?'selected':''}>Furniture</option>
+          <option ${p.category==='Electronics'?'selected':''}>Electronics</option>
+          <option ${p.category==='Stationery'?'selected':''}>Stationery</option>
+          <option ${p.category==='Other'?'selected':''}>Other</option>
+        </select>
+      </div>
+      <div class="form-field"><label>Supplier</label><input id="ef-sup" value="${p.supplier}"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label>Price (₹)</label><input type="number" id="ef-price" value="${p.price}"/></div>
+      <div class="form-field"><label>Stock Qty</label><input type="number" id="ef-stock" value="${p.stock}"/></div>
+    </div>
+    <div class="form-field"><label>Min Stock Level</label><input type="number" id="ef-min" value="${p.minStock}"/></div>`,
+    `<button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+     <button class="btn btn-primary" onclick="saveEditProduct(${id})">Save Changes</button>`);
+}
+
+function saveEditProduct(id) {
+  const p     = products.find(x => x.id === id);
+  p.name      = document.getElementById('ef-name').value.trim() || p.name;
+  p.sku       = document.getElementById('ef-sku').value.trim() || p.sku;
+  p.category  = document.getElementById('ef-cat').value;
+  p.supplier  = document.getElementById('ef-sup').value.trim() || p.supplier;
+  p.price     = parseInt(document.getElementById('ef-price').value) || p.price;
+  p.stock     = parseInt(document.getElementById('ef-stock').value);
+  p.minStock  = parseInt(document.getElementById('ef-min').value) || p.minStock;
+  p.status    = p.stock === 0 ? 'out-of-stock' : p.stock <= p.minStock ? 'low-stock' : 'in-stock';
+  closeModal();
+  showToast('success', `"${p.name}" updated successfully!`);
+  renderProducts();
+}
+
+function deleteProduct(id) {
+  const p = products.find(x => x.id === id);
+  showModal('Delete Product', `
+    <div class="alert alert-error">⚠️ This action cannot be undone.</div>
+    <p>Are you sure you want to delete <strong>"${p.name}"</strong> (${p.sku}) from inventory?</p>`,
+    `<button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+     <button class="btn btn-danger" onclick="confirmDelete(${id})">🗑️ Delete</button>`);
+}
+
+function confirmDelete(id) {
+  const p = products.find(x => x.id === id);
+  products = products.filter(x => x.id !== id);
+  closeModal();
+  showToast('success', `"${p.name}" removed from inventory.`);
+  renderProducts();
+}
+
+// ==================== STOCK ====================
+function renderStock() {
+  setTopbar('Check Stock', 'Monitor stock levels across all products');
+
+  const categories = [...new Set(products.map(p => p.category))];
+
+  const catCards = categories.map(cat => {
+    const items = products.filter(p => p.category === cat);
+    const total = items.reduce((s, p) => s + p.stock, 0);
+    const low = items.filter(p => p.status === 'low-stock').length;
+    const out = items.filter(p => p.status === 'out-of-stock').length;
+    return `
+      <div class="stat-card">
+        <div class="stat-icon" style="background:var(--accent-light)">🗂️</div>
+        <div class="stat-content">
+          <div class="label">${cat}</div>
+          <div class="value">${total} <span style="font-size:14px;font-weight:400;color:var(--text2)">units</span></div>
+          <div class="change">${items.length} products · ${low} low · ${out} out</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  const rows = [...products].sort((a,b) => (a.stock/a.minStock) - (b.stock/b.minStock)).map(p => {
+    const pct = Math.min(100, Math.round((p.stock / p.minStock) * 100));
+    const fillColor = p.stock === 0 ? 'var(--red)' : p.stock <= p.minStock ? 'var(--orange)' : 'var(--green)';
+    return `<tr>
+      <td><span style="font-family:var(--mono);font-size:12px;color:var(--text2)">${p.sku}</span></td>
+      <td><div class="font-500">${p.name}</div><div class="text-xs color-muted">${p.category}</div></td>
+      <td class="font-600" style="color:${fillColor}">${p.stock}</td>
+      <td>${p.minStock}</td>
+      <td style="min-width:120px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="progress-bar" style="flex:1">
+            <div class="progress-fill" style="width:${pct}%;background:${fillColor}"></div>
+          </div>
+          <span class="text-xs" style="color:${fillColor};min-width:32px">${pct}%</span>
+        </div>
+      </td>
+      <td><span class="badge ${statusBadge(p.status)}">${p.status.replace('-',' ')}</span></td>
+      <td>${p.supplier}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('page-content').innerHTML = `
+    <div class="page-section">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">${catCards}</div>
+      <div class="card">
+        <div class="card-header"><span>📊</span><span class="card-title">Stock Level Monitor</span></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>SKU</th><th>Product</th><th>Current</th><th>Min Level</th><th>Stock Level</th><th>Status</th><th>Supplier</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ==================== ORDERS ====================
+function renderOrders(filter = '') {
+  const isSupplier = currentUser.role === 'supplier';
+  const isAdmin    = currentUser.role === 'admin';
+  const canOrder   = !isSupplier;
+  const title      = isSupplier ? 'Receive Stock' : 'Orders';
+  const sub        = isSupplier ? 'Update order fulfillment status' : 'Place and track stock orders';
+
+  setTopbar(title, sub,
+    canOrder ? `<button class="btn btn-primary" onclick="openPlaceOrder()">+ Place Order</button>` : '');
+
+  const filtered = filter
+    ? orders.filter(o => o.product.toLowerCase().includes(filter.toLowerCase()) || o.id.toLowerCase().includes(filter.toLowerCase()))
+    : orders;
+
+  const rows = [...filtered].reverse().map(o => `
+    <tr>
+      <td><span class="font-500" style="font-family:var(--mono);font-size:12px">${o.id}</span></td>
+      <td class="font-500">${o.product}</td>
+      <td>${o.qty}</td>
+      <td>${o.supplier}</td>
+      <td>${o.date}</td>
+      <td><span class="badge ${orderStatusBadge(o.status)}">${o.status}</span></td>
+      <td class="font-500">₹${o.total.toLocaleString()}</td>
+      <td>
+        ${isSupplier && o.status === 'pending' ? `<button class="btn btn-success btn-sm" onclick="markReceived('${o.id}')">✅ Mark Received</button>` : ''}
+        ${isSupplier && o.status === 'in-transit' ? `<button class="btn btn-success btn-sm" onclick="markReceived('${o.id}')">📥 Confirm Delivery</button>` : ''}
+        ${isAdmin && o.status === 'pending' ? `<button class="btn btn-outline btn-sm" onclick="updateOrderStatus('${o.id}','in-transit')">🚚 Mark In-Transit</button>` : ''}
+      </td>
+    </tr>`).join('');
+
+  document.getElementById('page-content').innerHTML = `
+    <div class="page-section">
+      <div class="card">
+        <div class="card-header">
+          <span>🛒</span>
+          <span class="card-title">All Orders (${filtered.length})</span>
+          <div class="search-wrap ml-auto">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Search orders..." value="${filter}" oninput="renderOrders(this.value)"/>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Order ID</th><th>Product</th><th>Qty</th><th>Supplier</th><th>Date</th><th>Status</th><th>Total</th><th>Action</th></tr></thead>
+            <tbody>${rows.length ? rows : '<tr><td colspan="8"><div class="empty-state"><div class="icon">📭</div><p>No orders found.</p></div></td></tr>'}</tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+}
+
+function openPlaceOrder() {
+  const productOptions = products.map(p => `<option value="${p.name}">${p.name} (${p.sku})</option>`).join('');
+  showModal('Place New Order', `
+    <div class="form-field"><label>Product</label><select id="of-product">${productOptions}</select></div>
+    <div class="form-row">
+      <div class="form-field"><label>Quantity</label><input type="number" id="of-qty" placeholder="0" min="1"/></div>
+      <div class="form-field"><label>Supplier</label><input id="of-sup" placeholder="Supplier name"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label>Unit Price (₹)</label><input type="number" id="of-price" placeholder="0"/></div>
+      <div class="form-field"><label>Delivery Date</label><input type="date" id="of-date"/></div>
+    </div>`,
+    `<button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+     <button class="btn btn-primary" onclick="savePlaceOrder()">📦 Place Order</button>`);
+  document.getElementById('of-date').valueAsDate = new Date();
+}
+
+function savePlaceOrder() {
+  const product = document.getElementById('of-product').value;
+  const qty     = parseInt(document.getElementById('of-qty').value) || 0;
+  const sup     = document.getElementById('of-sup').value.trim();
+  const price   = parseInt(document.getElementById('of-price').value) || 0;
+  const date    = document.getElementById('of-date').value;
+
+  if (!qty || qty <= 0) { showToast('error', 'Please enter a valid quantity.'); return; }
+  if (!sup) { showToast('error', 'Supplier name is required.'); return; }
+
+  const id = 'ORD-' + String(orders.length + 1).padStart(3, '0');
+  const today = date || new Date().toISOString().split('T')[0];
+  orders.push({ id, product, qty, supplier: sup, date: today, status: 'pending', total: qty * price });
+  closeModal();
+  showToast('success', `Order ${id} placed successfully!`);
+  renderOrders();
+}
+
+function markReceived(orderId) {
+  const o = orders.find(x => x.id === orderId);
+  if (!o) return;
+  o.status = 'received';
+  // Update stock
+  const p = products.find(x => x.name === o.product);
+  if (p) {
+    p.stock += o.qty;
+    p.status = p.stock === 0 ? 'out-of-stock' : p.stock <= p.minStock ? 'low-stock' : 'in-stock';
+  }
+  showToast('success', `Order ${orderId} marked as received! Stock updated.`);
+  renderOrders();
+}
+
+function updateOrderStatus(orderId, newStatus) {
+  const o = orders.find(x => x.id === orderId);
+  if (o) { o.status = newStatus; showToast('info', `Order ${orderId} marked as ${newStatus}.`); renderOrders(); }
+}
+
+// ==================== REPORTS ====================
+function renderReports() {
+  if (currentUser.role !== 'admin') {
+    document.getElementById('page-content').innerHTML = `<div class="empty-state"><div class="icon">🔒</div><p>Reports are accessible to Admins only.</p></div>`;
+    return;
+  }
+  setTopbar('Generate Report', 'Insights and analytics on your inventory');
+
+  const totalValue = products.reduce((s, p) => s + p.price * p.stock, 0);
+  const totalOrders = orders.length;
+  const receivedOrders = orders.filter(o => o.status === 'received').length;
+  const orderValue = orders.filter(o=>o.status==='received').reduce((s,o)=>s+o.total,0);
+
+  // Category breakdown
+  const categories = [...new Set(products.map(p => p.category))];
+  const catData = categories.map(cat => {
+    const items = products.filter(p => p.category === cat);
+    const val = items.reduce((s,p) => s + p.price * p.stock, 0);
+    return { cat, count: items.length, val };
+  });
+  const maxVal = Math.max(...catData.map(c => c.val));
+
+  const catBars = catData.map(c => `
+    <div style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span class="font-500">${c.cat}</span>
+        <span class="color-muted">₹${(c.val/1000).toFixed(1)}K · ${c.count} products</span>
+      </div>
+      <div class="progress-bar" style="height:10px">
+        <div class="progress-fill" style="width:${Math.round((c.val/maxVal)*100)}%;background:var(--accent)"></div>
+      </div>
+    </div>`).join('');
+
+  const statusCounts = {
+    'In Stock':     products.filter(p=>p.status==='in-stock').length,
+    'Low Stock':    products.filter(p=>p.status==='low-stock').length,
+    'Out of Stock': products.filter(p=>p.status==='out-of-stock').length,
+  };
+  const statusColors = { 'In Stock': 'var(--green)', 'Low Stock': 'var(--orange)', 'Out of Stock': 'var(--red)' };
+  const statusRows = Object.entries(statusCounts).map(([k, v]) => `
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
+      <div style="width:10px;height:10px;border-radius:50%;background:${statusColors[k]};flex-shrink:0"></div>
+      <span style="flex:1">${k}</span>
+      <span class="font-600">${v}</span>
+      <span class="color-muted text-sm">${Math.round(v/products.length*100)}%</span>
+    </div>`).join('');
+
+  const topProducts = [...products].sort((a,b)=>(b.price*b.stock)-(a.price*a.stock)).slice(0,5);
+  const topRows = topProducts.map((p,i) => `
+    <tr>
+      <td class="font-600 color-muted">#${i+1}</td>
+      <td><div class="font-500">${p.name}</div><div class="text-xs color-muted">${p.sku}</div></td>
+      <td>${p.category}</td>
+      <td>${p.stock}</td>
+      <td class="font-600">₹${(p.price*p.stock).toLocaleString()}</td>
+    </tr>`).join('');
+
+  document.getElementById('page-content').innerHTML = `
+    <div class="page-section">
+      <div class="flex gap-3" style="margin-bottom:20px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="exportCSV()">⬇️ Export CSV</button>
+        <button class="btn btn-outline" onclick="window.print()">🖨️ Print Report</button>
+      </div>
+      <div class="stats-grid" style="margin-bottom:20px">
+        <div class="stat-card"><div class="stat-icon" style="background:var(--accent-light)">📦</div><div class="stat-content"><div class="label">Total Products</div><div class="value">${products.length}</div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:var(--purple-light)">💰</div><div class="stat-content"><div class="label">Inventory Value</div><div class="value">₹${(totalValue/1000).toFixed(0)}K</div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:var(--green-light)">✅</div><div class="stat-content"><div class="label">Orders Fulfilled</div><div class="value">${receivedOrders}/${totalOrders}</div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:var(--orange-light)">💵</div><div class="stat-content"><div class="label">Procurement Spend</div><div class="value">₹${(orderValue/1000).toFixed(0)}K</div></div></div>
+      </div>
+      <div class="report-grid">
+        <div class="card">
+          <div class="card-header"><span>📊</span><span class="card-title">Inventory by Category</span></div>
+          <div class="card-body">${catBars}</div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span>🥧</span><span class="card-title">Stock Status Breakdown</span></div>
+          <div class="card-body">
+            ${statusRows}
+            <div style="margin-top:16px;background:var(--surface2);border-radius:var(--radius-sm);padding:12px;text-align:center;color:var(--text2);font-size:12px">
+              Total: ${products.length} products tracked
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <div class="card-header"><span>🏆</span><span class="card-title">Top Products by Value</span></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>Product</th><th>Category</th><th>Stock</th><th>Value</th></tr></thead>
+            <tbody>${topRows}</tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+}
+
+function exportCSV() {
+  const headers = ['SKU', 'Name', 'Category', 'Price', 'Stock', 'Min Stock', 'Supplier', 'Status'];
+  const rows = products.map(p => [p.sku, p.name, p.category, p.price, p.stock, p.minStock, p.supplier, p.status]);
+  const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'inventory_report.csv'; a.click();
+  showToast('success', 'Report exported as CSV!');
+}
+
+// ==================== HELPERS ====================
+function statusBadge(status) {
+  return { 'in-stock': 'badge-green', 'low-stock': 'badge-orange', 'out-of-stock': 'badge-red' }[status] || 'badge-blue';
+}
+function orderStatusBadge(status) {
+  return { 'pending': 'badge-yellow', 'in-transit': 'badge-blue', 'received': 'badge-green', 'cancelled': 'badge-red' }[status] || 'badge-blue';
+}
+
+// ==================== MODAL ====================
+function showModal(title, body, footer) {
+  document.getElementById('modal-box').innerHTML = `
+    <div class="modal-header">
+      <span class="modal-title">${title}</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">${body}</div>
+    <div class="modal-footer">${footer}</div>`;
+  document.getElementById('modal-overlay').classList.remove('hidden');
+}
+function closeModal() { document.getElementById('modal-overlay').classList.add('hidden'); }
+document.getElementById('modal-overlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+
+// ==================== TOAST ====================
+function showToast(type, message) {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
+  toast.className = `toast toast-${type}`;
+  toast.innerHTML = `<span>${icons[type] || 'ℹ️'}</span><span>${message}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(() => toast.remove(), 300); }, 3000);
+}
+
+// ==================== KEYBOARD ====================
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('login-page') && !document.getElementById('login-page').classList.contains('hidden')) {
+    handleLogin();
+  }
+});
+</script>
+</body>
+</html>
